@@ -1,20 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import somya from "@/assets/somya.jpeg.asset.json";
+import { BirthdayFlakes } from "@/components/BirthdayFlakes";
+import { InteractiveCake } from "@/components/InteractiveCake";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Happy Birthday, Somya" },
+      { title: "Happy Birthday, Somya 🎉" },
       {
         name: "description",
         content:
-          "A little birthday page for Somya, from Sujal — music, memories and a genuine message.",
+          "A special birthday celebration for Somya, from Sujal — music, interactive cake, and a genuine birthday wish.",
       },
-      { property: "og:title", content: "Happy Birthday, Somya" },
+      { property: "og:title", content: "Happy Birthday, Somya 🎉" },
       {
         property: "og:description",
-        content: "A little birthday page for Somya, from Sujal.",
+        content: "A special birthday celebration for Somya, from Sujal.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -119,42 +121,9 @@ function useMusic() {
   return { playing, start, toggle };
 }
 
-/* ---------------- ambience ---------------- */
+/* ---------------- typing effect ---------------- */
 
-function Confetti({ count = 26 }: { count?: number }) {
-  const bits = useMemo(
-    () =>
-      Array.from({ length: count }, (_, i) => ({
-        left: (i * 97) % 100,
-        delay: (i % 13) * 0.9,
-        dur: 9 + ((i * 7) % 8),
-        size: 6 + ((i * 5) % 10),
-        hue: ["bg-primary", "bg-accent", "bg-secondary"][i % 3],
-        round: i % 2 === 0,
-      })),
-    [count],
-  );
-  return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 overflow-hidden">
-      {bits.map((b, i) => (
-        <span
-          key={i}
-          className={`absolute bottom-[-10vh] ${b.hue} ${b.round ? "rounded-full" : "rounded-[2px]"} opacity-70`}
-          style={{
-            left: `${b.left}%`,
-            width: b.size,
-            height: b.size,
-            animation: `float-up ${b.dur}s linear ${b.delay}s infinite`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-/* ---------------- typing ---------------- */
-
-function Typed({ text, speed = 28 }: { text: string; speed?: number }) {
+function Typed({ text, speed = 24 }: { text: string; speed?: number }) {
   const [n, setN] = useState(0);
   useEffect(() => {
     setN(0);
@@ -169,64 +138,95 @@ function Typed({ text, speed = 28 }: { text: string; speed?: number }) {
     }, speed);
     return () => window.clearInterval(id);
   }, [text, speed]);
+
   return (
-    <p className="whitespace-pre-line text-base leading-relaxed text-foreground/90 sm:text-lg">
+    <p className="whitespace-pre-line text-base leading-relaxed text-foreground/95 sm:text-lg">
       {text.slice(0, n)}
-      {n < text.length && <span className="ml-0.5 animate-pulse text-primary">|</span>}
+      {n < text.length && <span className="ml-0.5 animate-pulse text-primary font-bold">|</span>}
     </p>
   );
 }
 
-/* ---------------- scenes ---------------- */
+/* ---------------- gentlemanly friend letter ---------------- */
 
-const LETTER = `Somya,
+const LETTER = `Happy Birthday, Somya! 🎉
 
-Some people you meet and forget. You are not one of them.
+Wishing you a truly wonderful day and a year ahead filled with good health, happiness, and great success in everything you pursue.
 
-You are the kind of friend who shows up — who listens properly, who says the honest thing even when the easy thing is right there, and who somehow makes an ordinary day feel lighter. That is rare, and I don't take it for granted.
+You’ve always been a dependable and fantastic friend, and I really value the good laughs and conversations we share. May this new chapter bring you peace of mind, exciting opportunities, and many memorable moments.
 
-Thank you for being genuine with me. I hope this year is loud with the things you love, kind to you on the slow days, and full of moments you'll want to tell someone about.
+Have a brilliant birthday and an amazing year ahead!
 
-Happy birthday. Go be insufferably happy.
+Warm wishes,
+Sujal`;
 
-— Sujal`;
+/* ---------------- 4 uplifting friend wishes ---------------- */
 
 const WISHES = [
-  { t: "Health", d: "Boring, essential, and I mean it." },
-  { t: "Laughter", d: "The kind where you can't breathe." },
-  { t: "Courage", d: "For whatever you're quietly planning." },
-  { t: "People", d: "Who see you the way you actually are." },
+  {
+    icon: "✨",
+    t: "Health & Well-being",
+    d: "Good health, vibrant energy, and calm, peaceful days for all your goals.",
+  },
+  {
+    icon: "😊",
+    t: "Joy & Laughter",
+    d: "Plenty of genuine reasons to smile and laugh wholeheartedly every day.",
+  },
+  {
+    icon: "🎯",
+    t: "Success & Ambition",
+    d: "Smooth journeys, big achievements, and excelling in whatever you take on.",
+  },
+  {
+    icon: "🌟",
+    t: "Great Memories",
+    d: "Wonderful adventures, inspiring experiences, and true friends by your side.",
+  },
 ];
+
+/* ---------------- main page component ---------------- */
 
 function BirthdayPage() {
   const { playing, start, toggle } = useMusic();
   const [entered, setEntered] = useState(false);
   const [step, setStep] = useState(0);
-  const [blown, setBlown] = useState(false);
 
-  // auto-advance through the scenes once she taps in
+  // Progressive scene unlocks
   useEffect(() => {
     if (!entered) return;
-    const marks = [2600, 5200, 4200, 9000, 4200];
-    if (step >= marks.length) return;
-    const id = window.setTimeout(() => setStep((s) => s + 1), marks[step]);
-    return () => window.clearTimeout(id);
-  }, [entered, step]);
 
-  // candles go out on their own
-  useEffect(() => {
-    if (step < 2) return;
-    const id = window.setTimeout(() => setBlown(true), 2200);
-    return () => window.clearTimeout(id);
-  }, [step]);
+    // Unlock photo after 1.5s
+    const t1 = window.setTimeout(() => setStep((s) => Math.max(s, 1)), 1400);
+    // Unlock cake ritual after 2.8s
+    const t2 = window.setTimeout(() => setStep((s) => Math.max(s, 2)), 2800);
 
-  // gentle auto-scroll as new scenes appear
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+    };
+  }, [entered]);
+
+  // When cake cut completes, smoothly unlock letter and wishes!
+  const handleCakeCut = useCallback(() => {
+    // Unlock letter and wishes
+    setTimeout(() => {
+      setStep((s) => Math.max(s, 4));
+    }, 1200);
+
+    // Final sign-off unlock
+    setTimeout(() => {
+      setStep((s) => Math.max(s, 5));
+    }, 4500);
+  }, []);
+
+  // Smooth auto-scroll as new milestones appear
   const endRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!entered || step === 0) return;
     const id = window.setTimeout(
       () => endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" }),
-      450,
+      500,
     );
     return () => window.clearTimeout(id);
   }, [entered, step]);
@@ -236,135 +236,144 @@ function BirthdayPage() {
     try {
       start();
     } catch {
-      /* audio unavailable — the page still plays through */
+      /* audio fallback */
     }
   };
 
+  // Welcome / Intro Screen
   if (!entered) {
     return (
       <main className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center">
-        <Confetti count={14} />
-        <p className="text-xs tracking-[0.4em] text-muted-foreground uppercase">
-          13 September
-        </p>
-        <h1 className="mt-5 text-4xl leading-tight font-semibold text-balance text-gold sm:text-6xl">
-          Something small,
-          <br />
-          made just for Somya
-        </h1>
-        <p className="mt-5 max-w-sm text-sm text-muted-foreground">
-          Best with sound on. Everything after this happens on its own — you just watch.
-        </p>
-        <button
-          onClick={begin}
-          className="mt-10 rounded-full bg-primary px-9 py-4 text-base font-medium text-primary-foreground shadow-lg transition-transform animate-pulse-soft hover:scale-105 active:scale-95"
-        >
-          Begin
-        </button>
+        <BirthdayFlakes autoPopInterval={3200} />
+        
+        <div className="relative z-10 max-w-lg animate-rise">
+          <p className="text-xs font-semibold tracking-[0.4em] text-primary uppercase">
+            13 September • A Celebration
+          </p>
+          <h1 className="mt-5 text-4xl font-extrabold leading-tight text-balance text-gold sm:text-6xl">
+            Happy Birthday,
+            <br />
+            Somya! 🎂
+          </h1>
+          <p className="mt-5 text-sm leading-relaxed text-muted-foreground sm:text-base">
+            Turn your sound on for the melody. Click below to start the surprise!
+          </p>
+          
+          <button
+            onClick={begin}
+            className="mt-9 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-400 via-rose-400 to-amber-500 px-9 py-4 text-base font-semibold text-neutral-900 shadow-xl glow-gold transition-all duration-300 hover:scale-105 active:scale-95 animate-pulse-soft cursor-pointer"
+          >
+            <span>✨</span>
+            <span>Open Celebration</span>
+            <span>✨</span>
+          </button>
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="relative min-h-screen px-5 pt-16 pb-24 sm:px-8">
-      <Confetti />
+    <main className="relative min-h-screen px-4 pt-16 pb-28 sm:px-8">
+      {/* Auto-popping birthday flakes + ambient sparkles + click pops */}
+      <BirthdayFlakes autoPopInterval={3500} />
 
+      {/* Floating Music Toggle Button */}
       <button
         onClick={toggle}
-        aria-label={playing ? "Pause music" : "Play music"}
-        className="fixed top-4 right-4 z-20 rounded-full border border-border bg-card/70 px-4 py-2 text-xs text-card-foreground backdrop-blur-md"
+        aria-label={playing ? "Pause birthday melody" : "Play birthday melody"}
+        className="fixed top-4 right-4 z-40 flex items-center gap-2 rounded-full border border-border bg-card/80 px-4 py-2 text-xs font-medium text-foreground backdrop-blur-md shadow-md transition-all hover:bg-card hover:scale-105 cursor-pointer"
       >
-        {playing ? "♪ Pause music" : "♪ Play music"}
+        <span className={playing ? "animate-pulse text-amber-300" : "text-muted-foreground"}>
+          🎵
+        </span>
+        <span>{playing ? "Pause Music" : "Play Music"}</span>
       </button>
 
-      <div className="relative z-10 mx-auto flex max-w-2xl flex-col items-center gap-16 text-center">
-        {/* 1 — the wish */}
+      <div className="relative z-10 mx-auto flex max-w-2xl flex-col items-center gap-14 text-center">
+        {/* 1 — Birthday Title Banner */}
         <section className="animate-rise">
-          <p className="text-xs tracking-[0.4em] text-muted-foreground uppercase">
-            Happy birthday
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-semibold tracking-widest text-primary uppercase backdrop-blur-sm">
+            ✨ Wishing A Very Happy Birthday ✨
+          </div>
+          <h1 className="mt-4 text-5xl font-extrabold tracking-tight text-gold sm:text-7xl">
+            Somya
+          </h1>
+          <p className="mt-2 text-xs tracking-[0.3em] text-muted-foreground uppercase">
+            13 September
           </p>
-          <h1 className="mt-4 text-5xl font-semibold text-gold sm:text-7xl">Somya</h1>
         </section>
 
-        {/* 2 — her photo */}
+        {/* 2 — Photo Section */}
         {step >= 1 && (
-          <section className="animate-rise">
-            <div className="mx-auto h-56 w-56 overflow-hidden rounded-full border-2 border-primary/40 glow-ring animate-drift sm:h-72 sm:w-72">
+          <section className="animate-rise flex flex-col items-center">
+            <div className="relative mx-auto h-56 w-56 overflow-hidden rounded-full border-3 border-primary/50 glow-ring animate-drift sm:h-72 sm:w-72">
               <img
                 src={somya.url}
                 alt="Somya, smiling at a celebration"
                 className="h-full w-full object-cover"
                 loading="eager"
               />
+              <div className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-white/20" />
             </div>
-            <p className="mt-6 text-sm text-muted-foreground">
-              the birthday girl, doing what she does best — showing up and lighting the place up
+            <p className="mt-6 text-sm font-medium text-muted-foreground">
+              Celebrating a wonderful friend — Happy Birthday, Somya! 🌟
             </p>
           </section>
         )}
 
-        {/* 3 — cake, blows itself out */}
+        {/* 3 — Interactive Cake Ceremony (Blow Candles -> Cut Cake) */}
         {step >= 2 && (
-          <section className="animate-rise">
-            <div className="mx-auto w-52 sm:w-64">
-              <div className="mb-1 flex justify-center gap-4">
-                {[0, 1, 2].map((i) => (
-                  <span key={i} className="flex flex-col items-center">
-                    <span
-                      className={`h-3 w-2 rounded-full bg-primary transition-all duration-700 ${
-                        blown ? "scale-0 opacity-0" : "animate-flicker opacity-100"
-                      }`}
-                      style={{ animationDelay: `${i * 0.12}s` }}
-                    />
-                    <span className="h-5 w-1 rounded-sm bg-foreground/70" />
-                  </span>
-                ))}
-              </div>
-              <div className="h-8 rounded-t-xl bg-accent/80" />
-              <div className="h-10 bg-secondary" />
-              <div className="h-3 rounded-b-xl bg-primary/70" />
+          <section className="w-full animate-rise rounded-3xl border border-border bg-card/60 p-6 backdrop-blur-md shadow-2xl sm:p-8">
+            <InteractiveCake onCutComplete={handleCakeCut} />
+          </section>
+        )}
+
+        {/* 4 — Gentlemanly Friendship Note */}
+        {step >= 4 && (
+          <section className="w-full animate-rise rounded-3xl border border-border bg-card/70 p-6 text-left backdrop-blur-md shadow-xl sm:p-9">
+            <div className="mb-4 flex items-center justify-between border-b border-border/60 pb-3">
+              <span className="text-xs font-semibold tracking-wider text-primary uppercase">
+                A Note For You
+              </span>
+              <span className="text-xs text-muted-foreground">From Sujal</span>
             </div>
-            <p className="mt-5 text-sm text-muted-foreground">
-              {blown ? "Wish counted. Don't tell anyone what it was." : "Make a wish…"}
-            </p>
+            <Typed text={LETTER} speed={22} />
           </section>
         )}
 
-        {/* 4 — the letter */}
-        {step >= 3 && (
-          <section className="w-full animate-rise rounded-2xl border border-border bg-card/60 p-6 text-left backdrop-blur-md sm:p-9">
-            <Typed text={LETTER} />
-          </section>
-        )}
-
-        {/* 5 — wishes */}
+        {/* 5 — Four Uplifting Wishes Cards */}
         {step >= 4 && (
           <section className="w-full animate-rise">
-            <h2 className="mb-6 text-sm tracking-[0.3em] text-muted-foreground uppercase">
-              Four things for your year
+            <h2 className="mb-6 text-xs font-semibold tracking-[0.3em] text-muted-foreground uppercase">
+              Wishes For Your Year Ahead
             </h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {WISHES.map((w) => (
                 <div
                   key={w.t}
-                  className="rounded-xl border border-border bg-card/50 p-5 text-left backdrop-blur-sm"
+                  className="group rounded-2xl border border-border bg-card/50 p-5 text-left backdrop-blur-sm transition-all duration-300 hover:border-primary/40 hover:bg-card/75 hover:-translate-y-0.5 shadow-lg"
                 >
-                  <p className="text-lg font-medium text-gold">{w.t}</p>
-                  <p className="mt-1 text-sm text-muted-foreground">{w.d}</p>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">{w.icon}</span>
+                    <p className="text-base font-semibold text-gold">{w.t}</p>
+                  </div>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {w.d}
+                  </p>
                 </div>
               ))}
             </div>
           </section>
         )}
 
-        {/* 6 — sign off */}
+        {/* 6 — Final Gentlemanly Sign-off */}
         {step >= 5 && (
-          <section className="animate-rise pb-6">
-            <p className="text-2xl font-semibold text-gold sm:text-3xl">
-              Happy birthday, Somya.
+          <section className="animate-rise pb-8">
+            <p className="text-2xl font-bold text-gold sm:text-3xl">
+              Happy Birthday, Somya.
             </p>
             <p className="mt-3 text-sm text-muted-foreground">
-              From your friend, Sujal Jain — 13 September
+              From your friend, Sujal — 13 September
             </p>
           </section>
         )}

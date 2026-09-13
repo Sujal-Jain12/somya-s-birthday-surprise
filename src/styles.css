@@ -145,27 +145,29 @@
 
 /* ---------- Birthday page theme ---------- */
 :root {
-  --background: oklch(0.16 0.045 300);
-  --foreground: oklch(0.97 0.01 90);
-  --card: oklch(0.22 0.05 300);
-  --card-foreground: oklch(0.97 0.01 90);
-  --primary: oklch(0.78 0.16 45);
-  --primary-foreground: oklch(0.18 0.04 300);
-  --secondary: oklch(0.28 0.07 320);
-  --secondary-foreground: oklch(0.97 0.01 90);
-  --muted: oklch(0.26 0.05 300);
-  --muted-foreground: oklch(0.78 0.03 300);
-  --accent: oklch(0.72 0.17 350);
-  --accent-foreground: oklch(0.16 0.04 300);
-  --border: oklch(1 0 0 / 12%);
-  --glow-warm: 0 0 80px oklch(0.78 0.16 45 / 0.35);
-  --gradient-night: radial-gradient(120% 80% at 50% 0%, oklch(0.3 0.09 330) 0%, oklch(0.16 0.045 300) 60%, oklch(0.11 0.03 290) 100%);
-  --gradient-gold: linear-gradient(100deg, oklch(0.9 0.11 90), oklch(0.78 0.16 45), oklch(0.72 0.17 350));
+  --background: oklch(0.14 0.045 295);
+  --foreground: oklch(0.98 0.015 85);
+  --card: oklch(0.20 0.055 305 / 75%);
+  --card-foreground: oklch(0.98 0.015 85);
+  --primary: oklch(0.82 0.17 65);
+  --primary-foreground: oklch(0.16 0.05 305);
+  --secondary: oklch(0.28 0.08 325);
+  --secondary-foreground: oklch(0.98 0.015 85);
+  --muted: oklch(0.25 0.05 300);
+  --muted-foreground: oklch(0.78 0.04 310);
+  --accent: oklch(0.74 0.20 18);
+  --accent-foreground: oklch(0.98 0.015 85);
+  --border: oklch(1 0 0 / 14%);
+  --glow-warm: 0 0 60px oklch(0.82 0.17 65 / 0.4), 0 0 100px oklch(0.74 0.20 18 / 0.25);
+  --gradient-night: radial-gradient(130% 90% at 50% -10%, oklch(0.32 0.12 330) 0%, oklch(0.18 0.07 305) 50%, oklch(0.11 0.04 290) 100%);
+  --gradient-gold: linear-gradient(105deg, #FFF2C6 0%, #F6CF63 35%, #FFAF76 70%, #FF85A1 100%);
+  --gradient-festive: linear-gradient(135deg, #FF6B8B 0%, #F5D061 50%, #70A1FF 100%);
 }
 
 body {
   background: var(--gradient-night);
   background-attachment: fixed;
+  overflow-x: hidden;
 }
 
 @utility text-gold {
@@ -179,29 +181,137 @@ body {
   box-shadow: var(--glow-warm);
 }
 
+@utility glow-gold {
+  box-shadow: 0 0 25px oklch(0.82 0.17 65 / 0.45);
+}
+
+@utility glow-candle {
+  box-shadow: 0 0 16px rgba(255, 190, 50, 0.9), 0 0 32px rgba(255, 120, 30, 0.5);
+}
+
 @keyframes float-up {
   0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-  10% { opacity: 1; }
-  100% { transform: translateY(-110vh) rotate(25deg); opacity: 0; }
+  12% { opacity: 0.9; }
+  85% { opacity: 0.9; }
+  100% { transform: translateY(-115vh) rotate(360deg); opacity: 0; }
 }
+
 @keyframes rise-in {
-  from { opacity: 0; transform: translateY(24px); filter: blur(6px); }
+  from { opacity: 0; transform: translateY(28px); filter: blur(6px); }
   to { opacity: 1; transform: none; filter: blur(0); }
 }
+
 @keyframes pulse-soft {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.035); }
+  50% { transform: scale(1.04); }
 }
-@keyframes flicker {
-  0%, 100% { transform: scaleY(1) translateX(0); opacity: 1; }
-  50% { transform: scaleY(0.85) translateX(1px); opacity: 0.85; }
+
+@keyframes flame-flicker {
+  0%, 100% {
+    transform: scaleY(1) scaleX(1) rotate(-1deg);
+    opacity: 0.95;
+    filter: drop-shadow(0 0 8px rgba(255, 200, 50, 0.9));
+  }
+  30% {
+    transform: scaleY(1.15) scaleX(0.9) rotate(2deg);
+    opacity: 1;
+    filter: drop-shadow(0 0 12px rgba(255, 180, 40, 1));
+  }
+  70% {
+    transform: scaleY(0.88) scaleX(1.05) rotate(-2deg);
+    opacity: 0.85;
+    filter: drop-shadow(0 0 6px rgba(255, 150, 30, 0.8));
+  }
 }
+
+@keyframes smoke-float {
+  0% {
+    opacity: 0.8;
+    transform: translateY(0) scale(1) translateX(0);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(-24px) scale(1.6) translateX(6px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50px) scale(2.2) translateX(-10px);
+  }
+}
+
+@keyframes knife-slice {
+  0% {
+    opacity: 0;
+    transform: translate(60px, -60px) rotate(45deg);
+  }
+  25% {
+    opacity: 1;
+    transform: translate(15px, -35px) rotate(30deg);
+  }
+  55% {
+    opacity: 1;
+    transform: translate(-10px, 35px) rotate(15deg);
+  }
+  75% {
+    opacity: 1;
+    transform: translate(-15px, 50px) rotate(5deg);
+  }
+  90% {
+    opacity: 0.8;
+    transform: translate(-5px, 45px) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(30px, 30px) rotate(-10deg);
+  }
+}
+
+@keyframes slice-slide-out {
+  0% {
+    transform: translate(0, 0) scale(1);
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+  }
+  40% {
+    transform: translate(30px, 18px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  }
+  100% {
+    transform: translate(45px, 28px) scale(1.08);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.35);
+  }
+}
+
+@keyframes flake-pop-burst {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(0.3) rotate(0deg);
+  }
+  40% {
+    opacity: 1;
+    transform: translate(var(--tx, 0), var(--ty, 0)) scale(1.2) rotate(var(--rot, 180deg));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--tx, 0) * 1.3), calc(var(--ty, 0) + 120px)) scale(0.6) rotate(calc(var(--rot, 180deg) * 2));
+  }
+}
+
 @keyframes drift {
   0%, 100% { transform: translate3d(0,0,0); }
-  50% { transform: translate3d(0,-14px,0); }
+  50% { transform: translate3d(0,-12px,0); }
+}
+
+@keyframes sparkle-rotate {
+  0% { transform: rotate(0deg) scale(0.85); opacity: 0.7; }
+  50% { transform: rotate(180deg) scale(1.2); opacity: 1; }
+  100% { transform: rotate(360deg) scale(0.85); opacity: 0.7; }
 }
 
 @utility animate-rise { animation: rise-in 0.9s cubic-bezier(0.16,1,0.3,1) both; }
 @utility animate-drift { animation: drift 6s ease-in-out infinite; }
-@utility animate-pulse-soft { animation: pulse-soft 4s ease-in-out infinite; }
-@utility animate-flicker { animation: flicker 0.35s ease-in-out infinite; }
+@utility animate-pulse-soft { animation: pulse-soft 3.5s ease-in-out infinite; }
+@utility animate-flame { animation: flame-flicker 0.4s ease-in-out infinite; }
+@utility animate-smoke { animation: smoke-float 1.8s ease-out forwards; }
+@utility animate-knife { animation: knife-slice 1.8s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+@utility animate-slice-out { animation: slice-slide-out 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+@utility animate-sparkle { animation: sparkle-rotate 4s ease-in-out infinite; }
