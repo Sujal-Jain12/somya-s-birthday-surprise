@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
-import somya from "@/assets/somya.jpeg.asset.json";
+
 import { BirthdayFlakes } from "@/components/BirthdayFlakes";
 import { InteractiveCake } from "@/components/InteractiveCake";
 
@@ -308,7 +308,7 @@ function BirthdayPage() {
           <section className="animate-rise flex flex-col items-center">
             <div className="relative mx-auto h-56 w-56 overflow-hidden rounded-full border-3 border-primary/50 glow-ring animate-drift sm:h-72 sm:w-72">
               <img
-                src={somya.url}
+                src={"/somya.png"}
                 alt="Somya, smiling at a celebration"
                 className="h-full w-full object-cover"
                 loading="eager"
