@@ -142,3 +142,66 @@
     color: var(--color-foreground);
   }
 }
+
+/* ---------- Birthday page theme ---------- */
+:root {
+  --background: oklch(0.16 0.045 300);
+  --foreground: oklch(0.97 0.01 90);
+  --card: oklch(0.22 0.05 300);
+  --card-foreground: oklch(0.97 0.01 90);
+  --primary: oklch(0.78 0.16 45);
+  --primary-foreground: oklch(0.18 0.04 300);
+  --secondary: oklch(0.28 0.07 320);
+  --secondary-foreground: oklch(0.97 0.01 90);
+  --muted: oklch(0.26 0.05 300);
+  --muted-foreground: oklch(0.78 0.03 300);
+  --accent: oklch(0.72 0.17 350);
+  --accent-foreground: oklch(0.16 0.04 300);
+  --border: oklch(1 0 0 / 12%);
+  --glow-warm: 0 0 80px oklch(0.78 0.16 45 / 0.35);
+  --gradient-night: radial-gradient(120% 80% at 50% 0%, oklch(0.3 0.09 330) 0%, oklch(0.16 0.045 300) 60%, oklch(0.11 0.03 290) 100%);
+  --gradient-gold: linear-gradient(100deg, oklch(0.9 0.11 90), oklch(0.78 0.16 45), oklch(0.72 0.17 350));
+}
+
+body {
+  background: var(--gradient-night);
+  background-attachment: fixed;
+}
+
+@utility text-gold {
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility glow-ring {
+  box-shadow: var(--glow-warm);
+}
+
+@keyframes float-up {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translateY(-110vh) rotate(25deg); opacity: 0; }
+}
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(24px); filter: blur(6px); }
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+@keyframes pulse-soft {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
+@keyframes flicker {
+  0%, 100% { transform: scaleY(1) translateX(0); opacity: 1; }
+  50% { transform: scaleY(0.85) translateX(1px); opacity: 0.85; }
+}
+@keyframes drift {
+  0%, 100% { transform: translate3d(0,0,0); }
+  50% { transform: translate3d(0,-14px,0); }
+}
+
+@utility animate-rise { animation: rise-in 0.9s cubic-bezier(0.16,1,0.3,1) both; }
+@utility animate-drift { animation: drift 6s ease-in-out infinite; }
+@utility animate-pulse-soft { animation: pulse-soft 4s ease-in-out infinite; }
+@utility animate-flicker { animation: flicker 0.35s ease-in-out infinite; }
