@@ -79,9 +79,12 @@ function useMusic() {
 
   const start = useCallback(() => {
     if (!ctxRef.current) {
-      const ctx = new (window.AudioContext ||
-        (window as unknown as { webkitAudioContext: typeof AudioContext })
-          .webkitAudioContext)();
+      const AC =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext?: typeof AudioContext })
+          .webkitAudioContext;
+      if (!AC) return;
+      const ctx = new AC();
       const master = ctx.createGain();
       master.gain.value = 0.5;
       master.connect(ctx.destination);
@@ -229,8 +232,12 @@ function BirthdayPage() {
   }, [entered, step]);
 
   const begin = () => {
-    start();
     setEntered(true);
+    try {
+      start();
+    } catch {
+      /* audio unavailable — the page still plays through */
+    }
   };
 
   if (!entered) {
